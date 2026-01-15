@@ -1,0 +1,79 @@
+// comand for making the folder stucture 
+mkdir cmd
+mkdir cmd\api
+
+mkdir internal
+mkdir internal\config
+mkdir internal\database
+mkdir internal\handlers
+mkdir internal\middleware
+mkdir internal\models
+mkdir internal\repository
+
+mkdir migrations
+
+
+// init the project
+go mod init todo_api
+// run the project 
+go run cmd/api/main.go
+
+
+
+// depencies
+// gin framework
+go get -u github.com/gin-gonic/gin
+// postgress driver
+go get -u github.com/jackc/pgx/v5
+// connection pool
+go get -u github.com/jackc/pgx/v5/pgxpool
+// jwt
+go get -u github.com/golang-jwt/jwt/v5
+// migrations
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+//bcrpt
+go get golang.org/x/crypto/bcrypt@latest
+//godotenv
+go get github.com/joho/godotenv@latest
+// air
+go install github.com/air-verse/air@latest
+air -v
+// air init
+// in .air.toml cmd = "go build -o ./tmp/main.exe ./cmd/api"
+// air ->run project
+
+//connect to postgres with cmd
+psql --version
+
+psql -h localhost -p 5432 -U postgres -d todo_api
+
+\l        -- list databases
+\c dbname -- connect to database
+\dt       -- list tables
+\d table  -- describe table
+\q        -- quit
+
+
+CREATE TABLE IF NOT EXISTS todos (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    completed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+// migration command
+
+migrate create -ext sql -dir migrations -seq create_todos_table
+migrate create -ext sql -dir migrations -seq add_user_id_to_todos_table
+
+//scripts for migration
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+.\scripts\migrate.ps1 up
+.\scripts\migrate.ps1 down
+
+
+// jwt depencies
+ go get github.com/golang-jwt/jwt
+
+ go mod tidy
